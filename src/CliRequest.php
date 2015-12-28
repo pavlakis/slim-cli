@@ -15,6 +15,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class CliRequest
 {
+
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request = null;
+
+    /**
+     * Exposed for testing.
+     * @return ServerRequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
     /**
      * Invoke middleware
      *
@@ -28,11 +43,14 @@ class CliRequest
     {
         global $argv;
 
+        $this->request = $request;
+
         if (isset($argv)) {
+
             list($call, $path, $method, $params) = $argv;
 
             if (strtoupper($method) === 'GET') {
-                $request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
+                $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
                     'REQUEST_METHOD'    => 'GET',
                     'REQUEST_URI'       => $path . '?' . $params,
                     'QUERY_STRING'      => $params
@@ -42,6 +60,6 @@ class CliRequest
             unset($argv);
         }
 
-        return $next($request, $response);
+        return $next($this->request, $response);
     }
 }
