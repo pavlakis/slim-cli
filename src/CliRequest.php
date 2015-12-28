@@ -5,7 +5,7 @@
  *
  * @link      https://github.com/pavlakis/slim-cli
  * @copyright Copyright © 2015 Antonis Pavlakis
- * @license   https://github.com/pavlakis/slim-cli/LICENSE (BSD 3-Clause License)
+ * @license   https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
 
