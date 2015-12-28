@@ -1,0 +1,30 @@
+{
+  "name": "pavlakis/slim-cli",
+  "description": "Making a mock GET request through the CLI and enabling the same application entry point on CLI scripts.",
+  "keywords": [
+    "slim", "framework", "cli", "middleware"
+  ],
+  "homepage": "http://github.com/pavlakis/slim-cli",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Antonis Pavlakis",
+      "email": "adoni@pavlakis.info",
+      "homepage": "http://pavlakis.info"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "pavlakis\\cli\\tests\\" : "tests/phpunit",
+      "pavlakis\\cli\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=5.5.0"
+  },
+  "require-dev": {
+    "slim/slim": "~3.0",
+    "phpunit/phpunit": "^4.0"
+  }
+}
