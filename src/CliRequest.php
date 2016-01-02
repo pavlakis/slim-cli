@@ -4,7 +4,7 @@
  * Use in the form: php public/index.php /status GET event=true
  *
  * @link      https://github.com/pavlakis/slim-cli
- * @copyright Copyright © 2015 Antonis Pavlakis
+ * @copyright Copyright © 2015-2016 Antonis Pavlakis
  * @license   https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
