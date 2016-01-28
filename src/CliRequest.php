@@ -32,6 +32,44 @@ class CliRequest
     }
 
     /**
+     * Get a value from an array if exists otherwise return a default value
+     *
+     * @param   array   $argv
+     * @param   integer $key
+     * @param   mixed   $default
+     * @return  string
+     */
+    private function get($argv, $key, $default = '')
+    {
+        if (!array_key_exists($key, $argv)) {
+            return $default;
+        }
+
+        return $argv[$key];
+    }
+
+    /**
+     * Construct the URI if path and params are being passed
+     *
+     * @param string $path
+     * @param string $params
+     * @return string
+     */
+    private function getUri($path, $params)
+    {
+        $uri = '';
+        if (strlen($path) === 0) {
+            $path = '/';
+        }
+
+        if (strlen($params) !== 0) {
+            $uri = $path . '?' . $params;
+        }
+
+        return $uri;
+    }
+
+    /**
      * Invoke middleware
      *
      * @param  ServerRequestInterface   $request  PSR7 request object
@@ -48,12 +86,14 @@ class CliRequest
 
         if (isset($argv)) {
 
-            list($call, $path, $method, $params) = $argv;
+            $path   = $this->get($argv, 1);
+            $method = $this->get($argv, 2);
+            $params = $this->get($argv, 3);
 
             if (strtoupper($method) === 'GET') {
                 $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
                     'REQUEST_METHOD'    => 'GET',
-                    'REQUEST_URI'       => $path . '?' . $params,
+                    'REQUEST_URI'       => $this->getUri($path, $params),
                     'QUERY_STRING'      => $params
                 ]));
             }
