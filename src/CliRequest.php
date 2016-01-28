@@ -3,9 +3,10 @@
  * A Slim 3 middleware enabling a mock GET request to be made through the CLI.
  * Use in the form: php public/index.php /status GET event=true
  *
- * @link      https://github.com/pavlakis/slim-cli
- * @copyright Copyright © 2015-2016 Antonis Pavlakis
- * @license   https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
+ * @link        https://github.com/pavlakis/slim-cli
+ * @copyright   Copyright © 2015-2016 Antonis Pavlakis
+ * @author      Bobby DeVaux (@bobbyjason) Based on Bobby's code from: https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php
+ * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
 
