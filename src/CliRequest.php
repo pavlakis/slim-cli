@@ -47,7 +47,7 @@ class CliRequest
 
         if (isset($argv)) {
 
-            list($call, $path, $method, $params) = $argv;
+            list($call, $path, $method, $params ? $params : array()) = $argv;
 
             if (strtoupper($method) === 'GET') {
                 $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
