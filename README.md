@@ -11,7 +11,7 @@ composer require pavlakis/slim-cli
 
 ### Pass the parameters in this order
 `route / method / query string`
-```
+```php
 php public/index.php /status GET event=true
 ```
 
@@ -22,7 +22,7 @@ $app->add(new \pavlakis\cli\CliRequest());
 
 ### Pass a route to test it with
 
-```
+```php
 
 $app->get('/status', 'PHPMinds\Action\EventStatusAction:dispatch')
     ->setName('status');
@@ -31,7 +31,7 @@ $app->get('/status', 'PHPMinds\Action\EventStatusAction:dispatch')
 
 ### Check you're only using a CLI call
 
-```
+```php
 final class EventStatusAction
 {
     ...
@@ -54,3 +54,8 @@ final class EventStatusAction
 
 }
 ```
+
+
+### Credits
+
+Based on Bobby DeVaux's ([@bobbyjason](https://twitter.com/bobbyjason)) [Gulp Skeleton](https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php)
