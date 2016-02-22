@@ -109,4 +109,23 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($req, $cliRequest->getRequest());
     }
+
+    public function testRequestWhenNoParamsArePassed()
+    {
+        unset($GLOBALS['argv'][3]);
+
+        $req = $this->requestFactory();
+        $res = new Response();
+        $next = function (Request $req, Response $res) {
+            return $res;
+        };
+
+        /** @var CliRequest $cliRequest */
+        $cliRequest = new CliRequest();
+
+        /** @var  ResponseInterface $res */
+        $res = $cliRequest($req, $res, $next);
+
+        $this->assertEquals('/status', $cliRequest->getRequest()->getUri()->getPath());
+    }
 }

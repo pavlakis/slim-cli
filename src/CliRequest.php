@@ -57,13 +57,13 @@ class CliRequest
      */
     private function getUri($path, $params)
     {
-        $uri = '';
-        if (strlen($path) === 0) {
-            $path = '/';
+        $uri = '/';
+        if (strlen($path) > 0) {
+            $uri = $path;
         }
 
-        if (strlen($params) !== 0) {
-            $uri = $path . '?' . $params;
+        if (strlen($params) > 0) {
+            $uri .= '?' . $params;
         }
 
         return $uri;
