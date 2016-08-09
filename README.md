@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/pavlakis/slim-cli.svg)](https://travis-ci.org/pavlakis/slim-cli)
 [![Total Downloads](https://img.shields.io/packagist/dt/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
+[![Latest Stable Version](https://img.shields.io/packagist/v/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
 
 # Slim 3 Framework CLI Request Middleware
 
