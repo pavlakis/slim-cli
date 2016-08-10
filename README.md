@@ -57,6 +57,15 @@ final class EventStatusAction
 }
 ```
 
+Or we can use a [PHP Server Interface (SAPI) Middleware](https://github.com/pavlakis/php-server-interface-middleware) to do the SAPI check adding by adding it to a route:
+
+```php
+// By default returns a 403 if SAPI not part of the whitelist
+$app->get('/status', 'PHPMinds\Action\EventStatusAction:dispatch')
+    ->add(new Pavlakis\Middleware\Server\Sapi(["cli"]))
+```
+
+
 
 ### Credits
 
