@@ -1,4 +1,14 @@
 <?php
+/**
+ * Pavlakis Slim CLI Request
+ *
+ * @link        https://github.com/pavlakis/slim-cli
+ * @copyright   Copyright © 2017 Antonis Pavlakis
+ * @author      Antonios Pavlakis
+ * @author      Bobby DeVeaux (@bobbyjason) Based on Bobby's code from: https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php
+ * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
+ */
+
 namespace pavlakis\cli\tests;
 
 use pavlakis\cli\CliRequest;
@@ -108,5 +118,24 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         $res = $cliRequest($req, $res, $next);
 
         $this->assertEquals($req, $cliRequest->getRequest());
+    }
+
+    public function testRequestWhenNoParamsArePassed()
+    {
+        unset($GLOBALS['argv'][3]);
+
+        $req = $this->requestFactory();
+        $res = new Response();
+        $next = function (Request $req, Response $res) {
+            return $res;
+        };
+
+        /** @var CliRequest $cliRequest */
+        $cliRequest = new CliRequest();
+
+        /** @var  ResponseInterface $res */
+        $res = $cliRequest($req, $res, $next);
+
+        $this->assertEquals('/status', $cliRequest->getRequest()->getUri()->getPath());
     }
 }

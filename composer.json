@@ -21,10 +21,16 @@
     }
   },
   "require": {
-    "php": ">=5.5.0"
+    "php": "^5.5|^5.6|^7.0|^7.1"
   },
   "require-dev": {
-    "slim/slim": "~3.0",
+    "slim/slim": "^3.0",
     "phpunit/phpunit": "^4.0"
+  },
+  "config": {
+    "bin-dir": "bin",
+    "preferred-install": {
+      "*": "dist"
+    }
   }
 }
