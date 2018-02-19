@@ -96,6 +96,7 @@ class CliRequest
             if (strtoupper($method) === 'GET') {
                 $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
                     'REQUEST_METHOD'    => 'GET',
+                    'HTTPS'             => 'on'
                     'REQUEST_URI'       => $this->getUri($path, $params),
                     'QUERY_STRING'      => $params
                 ]));
