@@ -8,5 +8,11 @@ php:
 install: composer install
 script: ./bin/phpunit -c tests/phpunit/phpunit.xml
 
+matrix:
+  include:
+  - php: 7.2
+    install: composer require --dev phpstan/phpstan
+    script: composer static-analysis
+
 after_success:
     - bash <(curl -s https://codecov.io/bash)
