@@ -9,7 +9,7 @@
  */
 namespace pavlakis\cli\tests\Environment;
 
-use pavlakis\cli\Environment\DefaultEnvironment;
+use pavlakis\cli\Environment\EnvironmentProperties;
 
 
 class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
@@ -23,7 +23,7 @@ class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
             'QUERY_STRING'      => ''
         ];
 
-        static::assertSame($defaultProperties, (new DefaultEnvironment())->getProperties());
+        static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties());
     }
 
     public function testGetPropertiesWithArgumentsReturnsUpdatedDefaultProperties()
@@ -34,7 +34,7 @@ class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
             'QUERY_STRING'      => 'event=true'
         ];
 
-        static::assertSame($defaultProperties, (new DefaultEnvironment())->getProperties([
+        static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties([
             'REQUEST_URI'       => '/status',
             'QUERY_STRING'      => 'event=true'
         ]));
@@ -42,6 +42,6 @@ class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetGetRequestMethod()
     {
-        static::assertSame('GET', (new DefaultEnvironment())->getRequestMethod());
+        static::assertSame('GET', (new EnvironmentProperties())->getRequestMethod());
     }
 }
