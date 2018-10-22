@@ -3,27 +3,23 @@
  * Pavlakis Slim CLI Request
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2017 Antonis Pavlakis
+ * @copyright   Copyright © 2018 Antonis Pavlakis
  * @author      Antonios Pavlakis
  * @author      Bobby DeVeaux (@bobbyjason) Based on Bobby's code from: https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
-
 namespace pavlakis\cli\tests;
 
-use pavlakis\cli\CliRequest;
-
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Http\Body;
+use pavlakis\cli\CliRequest;
+use Slim\Http\Response;
 use Slim\Http\Headers;
 use Slim\Http\Request;
-use Slim\Http\Response;
+use Slim\Http\Body;
 use Slim\Http\Uri;
 
 class CliRequestTest extends \PHPUnit_Framework_TestCase
 {
-
     public function setUp()
     {
         global $argv;
@@ -48,6 +44,9 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         return new Request('GET', $uri, $headers, $cookies, $serverParams, $body);
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testCorrectRequestParametersArePassed()
     {
         $req = $this->requestFactory();
@@ -65,6 +64,9 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('event=true', $cliRequest->getRequest()->getUri()->getQuery());
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testMinimalCorrectRequestParametersArePassed()
     {
         $req = $this->requestFactory();
@@ -84,6 +86,9 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $cliRequest->getRequest()->getUri()->getQuery());
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testRequestPathHasBeenUpdated()
     {
         $req = $this->requestFactory();
@@ -101,6 +106,9 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/status', $cliRequest->getRequest()->getUri()->getPath());
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testRequestRemainsSameIfNoArgvIsPassed()
     {
         unset($GLOBALS['argv']);
@@ -120,6 +128,9 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($req, $cliRequest->getRequest());
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testRequestWhenNoParamsArePassed()
     {
         unset($GLOBALS['argv'][3]);

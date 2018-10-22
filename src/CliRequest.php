@@ -12,16 +12,14 @@
  */
 namespace pavlakis\cli;
 
-
-use pavlakis\cli\Environment\DefaultEnvironment;
-use pavlakis\cli\Environment\EnvironmentInterface;
+use pavlakis\cli\Environment\EnvironmentProperties;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class CliRequest
 {
     /**
-     * @var EnvironmentInterface
+     * @var EnvironmentProperties
      */
     private $environment;
 
@@ -31,13 +29,14 @@ class CliRequest
     protected $request = null;
 
     /**
-     * @param EnvironmentInterface|null $environment
+     * @param EnvironmentProperties $environment
+     * @throws Exception\DefaultPropertyExistsException
      */
-    public function __construct(EnvironmentInterface $environment = null)
+    public function __construct(EnvironmentProperties $environment = null)
     {
         # BC compatibility - always include DefaultEnvironment
         if (is_null($environment)) {
-            $environment = new DefaultEnvironment();
+            $environment = new EnvironmentProperties();
         }
         $this->environment = $environment;
     }
@@ -90,6 +89,21 @@ class CliRequest
     }
 
     /**
+     * @param string $uri
+     * @param string $queryString
+     * @return \Slim\Http\Request
+     */
+    private function getMockRequest($uri, $queryString)
+    {
+        return \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock(
+            $this->environment->getProperties([
+                'REQUEST_URI'       => $uri,
+                'QUERY_STRING'      => $queryString
+            ])
+        ));
+    }
+
+    /**
      * Invoke middleware
      *
      * @param  ServerRequestInterface   $request  PSR7 request object
@@ -105,18 +119,12 @@ class CliRequest
         $this->request = $request;
 
         if (isset($argv)) {
-
             $path   = $this->get($argv, 1);
             $method = $this->get($argv, 2);
             $params = $this->get($argv, 3);
 
             if (strtoupper($method) === $this->environment->getRequestMethod()) {
-                $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock(
-                    $this->environment->getProperties([
-                        'REQUEST_URI'       => $this->getUri($path, $params),
-                        'QUERY_STRING'      => $params
-                    ])
-                ));
+                $this->request = $this->getMockRequest($this->getUri($path, $params), $params);
             }
 
             unset($argv);
