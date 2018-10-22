@@ -6,24 +6,41 @@
  * Use in the form: php public/index.php /status GET event=true
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2017 Antonis Pavlakis
+ * @copyright   Copyright © 2018 Antonis Pavlakis
  * @author      Antonios Pavlakis
- * @author      Bobby DeVeaux (@bobbyjason) Based on Bobby's code from: https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
 
 
-use Psr\Http\Message\ResponseInterface;
+use pavlakis\cli\Environment\DefaultEnvironment;
+use pavlakis\cli\Environment\EnvironmentInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class CliRequest
 {
+    /**
+     * @var EnvironmentInterface
+     */
+    private $environment;
 
     /**
      * @var ServerRequestInterface
      */
     protected $request = null;
+
+    /**
+     * @param EnvironmentInterface|null $environment
+     */
+    public function __construct(EnvironmentInterface $environment = null)
+    {
+        # BC compatibility - always include DefaultEnvironment
+        if (is_null($environment)) {
+            $environment = new DefaultEnvironment();
+        }
+        $this->environment = $environment;
+    }
 
     /**
      * Exposed for testing.
@@ -93,12 +110,13 @@ class CliRequest
             $method = $this->get($argv, 2);
             $params = $this->get($argv, 3);
 
-            if (strtoupper($method) === 'GET') {
-                $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock([
-                    'REQUEST_METHOD'    => 'GET',
-                    'REQUEST_URI'       => $this->getUri($path, $params),
-                    'QUERY_STRING'      => $params
-                ]));
+            if (strtoupper($method) === $this->environment->getRequestMethod()) {
+                $this->request = \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock(
+                    $this->environment->getProperties([
+                        'REQUEST_URI'       => $this->getUri($path, $params),
+                        'QUERY_STRING'      => $params
+                    ])
+                ));
             }
 
             unset($argv);
