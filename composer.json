@@ -11,26 +11,36 @@
     {
       "name": "Antonis Pavlakis",
       "email": "adoni@pavlakis.info",
-      "homepage": "http://pavlakis.info"
+      "homepage": "https://pavlakis.uk"
     }
   ],
   "autoload": {
     "psr-4": {
-      "pavlakis\\cli\\tests\\" : "tests/phpunit",
       "pavlakis\\cli\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "pavlakis\\cli\\tests\\" : "tests/phpunit"
+    }
+  },
   "require": {
-    "php": "^5.5|^5.6|^7.0|^7.1"
+    "php": ">=5.5.0"
   },
   "require-dev": {
     "slim/slim": "^3.0",
-    "phpunit/phpunit": "^4.0"
+    "phpunit/phpunit": "^4.0",
+    "phpstan/phpstan": "^0.10.5",
+    "friendsofphp/php-cs-fixer": "^2.13"
   },
   "config": {
     "bin-dir": "bin",
     "preferred-install": {
       "*": "dist"
     }
+  },
+  "scripts": {
+    "test": "phpunit -c tests/phpunit/phpunit.xml --colors=always",
+    "static-analysis": "phpstan analyse src --level 7"
   }
 }

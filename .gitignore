@@ -1,2 +1,5 @@
 vendor/
 .idea/
+bin/
+tests/phpunit/clover.xml
+composer.lock
