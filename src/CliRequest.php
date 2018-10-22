@@ -12,16 +12,14 @@
  */
 namespace pavlakis\cli;
 
-
-use pavlakis\cli\Environment\DefaultEnvironment;
-use pavlakis\cli\Environment\EnvironmentInterface;
+use pavlakis\cli\Environment\EnvironmentProperties;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class CliRequest
 {
     /**
-     * @var EnvironmentInterface
+     * @var EnvironmentProperties
      */
     private $environment;
 
@@ -31,13 +29,14 @@ class CliRequest
     protected $request = null;
 
     /**
-     * @param EnvironmentInterface|null $environment
+     * @param EnvironmentProperties $environment
+     * @throws Exception\DefaultPropertyExistsException
      */
-    public function __construct(EnvironmentInterface $environment = null)
+    public function __construct(EnvironmentProperties $environment = null)
     {
         # BC compatibility - always include DefaultEnvironment
         if (is_null($environment)) {
-            $environment = new DefaultEnvironment();
+            $environment = new EnvironmentProperties();
         }
         $this->environment = $environment;
     }
@@ -87,6 +86,15 @@ class CliRequest
         }
 
         return $uri;
+    }
+
+    /**
+     * @param string $uri
+     * @param string $queryString
+     */
+    private function getMockRequest($uri, $queryString)
+    {
+     //SERVER_PORT
     }
 
     /**

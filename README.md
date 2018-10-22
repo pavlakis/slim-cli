@@ -23,18 +23,19 @@ php public/index.php /status GET event=true
 
 ### Add it in the middleware section of your application
 
-```
+```php
 $app->add(new \pavlakis\cli\CliRequest());
 ```
 
-Which is compatible with:
+Adding custom parameters:
 
+```php
+$app->add(
+	new \pavlakis\cli\CliRequest(
+		new EnvironmentProperties(['SERVER_PORT' => 9000])
+	)
+);
 ```
-$app->add(new \pavlakis\cli\CliRequest(new DefaultEnvironment()));
-```
-
-> Can also add custom environment parameters using the `EnvironmentInterface` to create a `Custom` environment and inject it instead of `DefaultEnvironment`.
-
 
 ### Pass a route to test it with
 

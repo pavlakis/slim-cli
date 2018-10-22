@@ -1,14 +1,52 @@
 <?php
-
+/**
+ * Pavlakis Slim CLI Request
+ *
+ * @link        https://github.com/pavlakis/slim-cli
+ * @copyright   Copyright © 2018 Antonis Pavlakis
+ * @author      Antonios Pavlakis
+ * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
+ */
 namespace pavlakis\cli\Environment;
 
-final class DefaultEnvironment implements EnvironmentInterface
+use pavlakis\cli\Exception\DefaultPropertyExistsException;
+
+final class EnvironmentProperties
 {
     private $properties = [
         'REQUEST_METHOD'    => 'GET',
         'REQUEST_URI'       => '',
         'QUERY_STRING'      => ''
     ];
+
+    /**
+     * @param array $customProperties
+     * @throws DefaultPropertyExistsException
+     */
+    public function __construct(array $customProperties = [])
+    {
+        $this->mergeCustomProperties($customProperties);
+    }
+
+    /**
+     * @param array $customProperties
+     * @throws DefaultPropertyExistsException
+     */
+    private function mergeCustomProperties(array $customProperties = [])
+    {
+        foreach ($customProperties as $customProperty => $value) {
+            if (array_key_exists(strtoupper($customProperty), $this->properties)) {
+                throw new DefaultPropertyExistsException(
+                    sprintf('Cannot override default property for %s', $customProperty)
+                );
+            }
+
+            unset($customProperties[$customProperty]);
+            $customProperties[strtoupper($customProperty)] = $value;
+        }
+
+        $this->properties = array_merge($this->properties, $customProperties);
+    }
 
     /**
      * @param array $args

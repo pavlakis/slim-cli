@@ -12,9 +12,11 @@ namespace pavlakis\cli\tests\Environment;
 use pavlakis\cli\Environment\EnvironmentProperties;
 
 
-class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
+class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
 {
-
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testGetPropertiesWithEmptyArgumentsReturnsDefaultProperties()
     {
         $defaultProperties = [
@@ -26,6 +28,9 @@ class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
         static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties());
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testGetPropertiesWithArgumentsReturnsUpdatedDefaultProperties()
     {
         $defaultProperties = [
@@ -40,6 +45,35 @@ class DefaultEnvironmentTest extends \PHPUnit_Framework_TestCase
         ]));
     }
 
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
+    public function testGetPropertiesWithCustomProperty()
+    {
+        $defaultProperties = [
+            'REQUEST_METHOD'    => 'GET',
+            'REQUEST_URI'       => '/status',
+            'QUERY_STRING'      => 'event=true',
+            'SERVER_PORT'      => 9000,
+        ];
+
+        static::assertSame($defaultProperties, (new EnvironmentProperties(['SERVER_PORT' => 9000]))->getProperties([
+            'REQUEST_URI'       => '/status',
+            'QUERY_STRING'      => 'event=true'
+        ]));
+    }
+
+    /**
+     * @expectedException \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
+    public function testMergeCustomPropertiesPassingDefaultPropertyThrowsException()
+    {
+        new EnvironmentProperties(['REQUEST_METHOD' => 'POST']);
+    }
+
+    /**
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
     public function testGetGetRequestMethod()
     {
         static::assertSame('GET', (new EnvironmentProperties())->getRequestMethod());
