@@ -8,3 +8,5 @@ php:
 install: composer install
 script: ./bin/phpunit -c tests/phpunit/phpunit.xml
 
+after_success:
+    - bash <(curl -s https://codecov.io/bash)

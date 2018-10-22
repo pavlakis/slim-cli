@@ -1,26 +1,40 @@
 [![Build Status](https://travis-ci.org/pavlakis/slim-cli.svg)](https://travis-ci.org/pavlakis/slim-cli)
 [![Total Downloads](https://img.shields.io/packagist/dt/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
 [![Latest Stable Version](https://img.shields.io/packagist/v/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
+[![codecov](https://codecov.io/gh/pavlakis/slim-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pavlakis/slim-cli)
+
 
 # Slim 3 Framework CLI Request Middleware
 
 This middleware will transform a CLI call into a GET Request.
 
 ### Add it with composer
+
 ```
 composer require pavlakis/slim-cli
 ```
 
 ### Pass the parameters in this order
 `route / method / query string`
+
 ```php
 php public/index.php /status GET event=true
 ```
 
 ### Add it in the middleware section of your application
+
 ```
 $app->add(new \pavlakis\cli\CliRequest());
 ```
+
+Which is compatible with:
+
+```
+$app->add(new \pavlakis\cli\CliRequest(new DefaultEnvironment()));
+```
+
+> Can also add custom environment parameters using the `EnvironmentInterface` to create a `Custom` environment and inject it instead of `DefaultEnvironment`.
+
 
 ### Pass a route to test it with
 
