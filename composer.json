@@ -29,9 +29,7 @@
   },
   "require-dev": {
     "slim/slim": "^3.0",
-    "phpunit/phpunit": "^4.0",
-    "phpstan/phpstan": "^0.10.5",
-    "friendsofphp/php-cs-fixer": "^2.13"
+    "phpunit/phpunit": "^4.0"
   },
   "config": {
     "bin-dir": "bin",
