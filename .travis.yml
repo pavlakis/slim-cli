@@ -24,17 +24,5 @@ matrix:
     install: composer require --dev phpstan/phpstan
     script: composer static-analysis
 
-matrix:
-  include:
-  - php: 7.2
-    install: composer require --dev phpstan/phpstan
-    script: composer static-analysis
-
-matrix:
-  include:
-  - php: 7.2
-    install: composer require --dev phpstan/phpstan
-    script: composer static-analysis
-
 after_success:
     - bash <(curl -s https://codecov.io/bash)
