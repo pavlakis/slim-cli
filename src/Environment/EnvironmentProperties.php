@@ -3,7 +3,7 @@
  * Pavlakis Slim CLI Request
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2018 Antonis Pavlakis
+ * @copyright   Copyright © 2019 Antonis Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
@@ -74,6 +74,7 @@ final class EnvironmentProperties
 
     /**
      * @return string
+     * @deprecated
      */
     public function getRequestMethod()
     {
