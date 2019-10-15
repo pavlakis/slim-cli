@@ -32,6 +32,8 @@ class Request implements RequestInterface
      */
     public function getMockRequest($environmentProperties)
     {
-        return \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock($environmentProperties));
+        /** @var \Slim\Http\Environment $mockEnvironment */
+        $mockEnvironment = \Slim\Http\Environment::mock($environmentProperties);
+        return \Slim\Http\Request::createFromEnvironment($mockEnvironment);
     }
 }
