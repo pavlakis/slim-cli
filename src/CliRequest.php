@@ -6,21 +6,23 @@
  * Use in the form: php public/index.php /status GET event=true
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2019 Antonis Pavlakis
+ * @copyright   Copyright © 2019 Antonios Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
 
+use pavlakis\cli\Environment\EnvironmentPropertiesInterface;
 use pavlakis\cli\Environment\EnvironmentProperties;
-use pavlakis\cli\Request\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use pavlakis\cli\Request\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use pavlakis\cli\Request\Request;
 
 class CliRequest
 {
     /**
-     * @var EnvironmentProperties
+     * @var EnvironmentPropertiesInterface
      */
     private $environment;
 
@@ -35,12 +37,12 @@ class CliRequest
     private $requestAdapter;
 
     /**
-     * @param EnvironmentProperties|null $environment
-     * @param RequestInterface|null      $request
+     * @param EnvironmentPropertiesInterface|null $environment
+     * @param RequestInterface|null               $request
      *
      * @throws Exception\DefaultPropertyExistsException
      */
-    public function __construct(EnvironmentProperties $environment = null, RequestInterface $request = null)
+    public function __construct(EnvironmentPropertiesInterface $environment = null, RequestInterface $request = null)
     {
         # BC compatibility - always include DefaultEnvironment
         if ($environment === null) {
