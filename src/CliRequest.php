@@ -13,7 +13,6 @@
 namespace pavlakis\cli;
 
 use pavlakis\cli\Environment\EnvironmentProperties;
-use pavlakis\cli\Request\Request;
 use pavlakis\cli\Request\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
