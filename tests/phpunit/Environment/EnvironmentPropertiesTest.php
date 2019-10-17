@@ -1,17 +1,22 @@
 <?php
 /**
- * Pavlakis Slim CLI Request
+ * Pavlakis Slim CLI Request.
  *
- * @link        https://github.com/pavlakis/slim-cli
+ * @see        https://github.com/pavlakis/slim-cli
+ *
  * @copyright   Copyright © 2018 Antonis Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
+
 namespace pavlakis\cli\tests\Environment;
 
 use pavlakis\cli\Environment\EnvironmentProperties;
 
-
+/**
+ * @internal
+ * @coversNothing
+ */
 class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -20,9 +25,9 @@ class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
     public function testGetPropertiesWithEmptyArgumentsReturnsDefaultProperties()
     {
         $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '',
-            'QUERY_STRING'      => ''
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '',
+            'QUERY_STRING' => '',
         ];
 
         static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties());
@@ -34,14 +39,14 @@ class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
     public function testGetPropertiesWithArgumentsReturnsUpdatedDefaultProperties()
     {
         $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/status',
+            'QUERY_STRING' => 'event=true',
         ];
 
         static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties([
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
+            'REQUEST_URI' => '/status',
+            'QUERY_STRING' => 'event=true',
         ]));
     }
 
@@ -51,15 +56,15 @@ class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
     public function testGetPropertiesWithCustomProperty()
     {
         $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true',
-            'SERVER_PORT'      => 9000,
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/status',
+            'QUERY_STRING' => 'event=true',
+            'SERVER_PORT' => 9000,
         ];
 
         static::assertSame($defaultProperties, (new EnvironmentProperties(['SERVER_PORT' => 9000]))->getProperties([
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
+            'REQUEST_URI' => '/status',
+            'QUERY_STRING' => 'event=true',
         ]));
     }
 
