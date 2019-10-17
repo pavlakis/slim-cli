@@ -1,6 +1,7 @@
 dist: trusty
 language: php
 php:
+  - 7.3
   - 7.2
   - 7.1
   - 7.0
@@ -8,22 +9,19 @@ php:
   - 5.5
 
 install:
-  - composer install
+  - composer remove friendsofphp/php-cs-fixer
 
 matrix:
   include:
   - php: 7.2
     env: PHPSTAN=1 DEFAULT=0
+  - php: 7.3
+    env: PHPCS=1 DEFAULT=0
 
 script:
   - composer test
   - if [[ $PHPSTAN == 1 ]]; then composer require --dev phpstan/phpstan && composer static-analysis; fi
-
-matrix:
-  include:
-  - php: 7.2
-    install: composer require --dev phpstan/phpstan
-    script: composer static-analysis
+  - if [[ $PHPCS == 1 ]]; then composer require --dev friendsofphp/php-cs-fixer && composer check-style; fi
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
