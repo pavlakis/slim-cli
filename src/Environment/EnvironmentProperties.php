@@ -3,7 +3,7 @@
  * Pavlakis Slim CLI Request
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2019 Antonis Pavlakis
+ * @copyright   Copyright © 2019 Antonios Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
@@ -11,7 +11,7 @@ namespace pavlakis\cli\Environment;
 
 use pavlakis\cli\Exception\DefaultPropertyExistsException;
 
-final class EnvironmentProperties
+final class EnvironmentProperties implements EnvironmentPropertiesInterface
 {
     private $properties = [
         'REQUEST_METHOD'    => 'GET',
