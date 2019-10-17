@@ -2,17 +2,19 @@
 /**
  * Pavlakis Slim CLI Request
  *
- * A Slim 3 middleware enabling a mock GET request to be made through the CLI.
+ * A Slim 3 middleware enabling a mock HTTP request to be made through the CLI.
  * Use in the form: php public/index.php /status GET event=true
  *
  * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2018 Antonis Pavlakis
+ * @copyright   Copyright © 2019 Antonis Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
 namespace pavlakis\cli;
 
 use pavlakis\cli\Environment\EnvironmentProperties;
+use pavlakis\cli\Request\Request;
+use pavlakis\cli\Request\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -29,16 +31,28 @@ class CliRequest
     protected $request = null;
 
     /**
-     * @param EnvironmentProperties $environment
+     * @var RequestInterface
+     */
+    private $requestAdapter;
+
+    /**
+     * @param EnvironmentProperties|null $environment
+     * @param RequestInterface|null      $request
+     *
      * @throws Exception\DefaultPropertyExistsException
      */
-    public function __construct(EnvironmentProperties $environment = null)
+    public function __construct(EnvironmentProperties $environment = null, RequestInterface $request = null)
     {
         # BC compatibility - always include DefaultEnvironment
-        if (is_null($environment)) {
+        if ($environment === null) {
             $environment = new EnvironmentProperties();
         }
         $this->environment = $environment;
+
+        if ($request === null) {
+            $request = new Request();
+        }
+        $this->requestAdapter = $request;
     }
 
     /**
@@ -91,16 +105,19 @@ class CliRequest
     /**
      * @param string $uri
      * @param string $queryString
+     * @param string $method
+     *
      * @return \Slim\Http\Request
      */
-    private function getMockRequest($uri, $queryString)
+    private function getMockRequest($uri, $queryString, $method)
     {
-        return \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock(
-            $this->environment->getProperties([
-                'REQUEST_URI'       => $uri,
-                'QUERY_STRING'      => $queryString
-            ])
-        ));
+        $environmentProperties = $this->environment->getProperties([
+            'REQUEST_METHOD'    => strtoupper($method),
+            'REQUEST_URI'       => $uri,
+            'QUERY_STRING'      => $queryString
+        ]);
+
+        return $this->requestAdapter->getMockRequest($environmentProperties);
     }
 
     /**
@@ -123,8 +140,8 @@ class CliRequest
             $method = $this->get($argv, 2);
             $params = $this->get($argv, 3);
 
-            if (strtoupper($method) === $this->environment->getRequestMethod()) {
-                $this->request = $this->getMockRequest($this->getUri($path, $params), $params);
+            if ($this->requestAdapter->isMethodSupported($method)) {
+                $this->request = $this->getMockRequest($this->getUri($path, $params), $params, $method);
             }
 
             unset($argv);

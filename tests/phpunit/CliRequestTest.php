@@ -149,4 +149,49 @@ class CliRequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('/status', $cliRequest->getRequest()->getUri()->getPath());
     }
+
+    /**
+     * @dataProvider httpMethodDataProvider
+     * @param $method
+     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
+     */
+    public function testAllHttpMethodsAreAllowed($method)
+    {
+        global $argv;
+
+        $argv[0] = 'cli.php';
+        $argv[1] = '/status';
+        $argv[2] = $method;
+        $argv[3] = 'event=true';
+
+        $req = $this->requestFactory();
+        $res = new Response();
+        $next = function (Request $req, Response $res) {
+            return $res;
+        };
+
+        /** @var CliRequest $cliRequest */
+        $cliRequest = new CliRequest();
+
+        /** @var  ResponseInterface $res */
+        $res = $cliRequest($req, $res, $next);
+
+        $this->assertEquals('event=true', $cliRequest->getRequest()->getUri()->getQuery());
+        $this->assertEquals($method, $cliRequest->getRequest()->getMethod());
+    }
+
+    public function httpMethodDataProvider()
+    {
+        return [
+            ['GET'],
+            ['HEAD'],
+            ['POST'],
+            ['PUT'],
+            ['DELETE'],
+            ['CONNECT'],
+            ['OPTIONS'],
+            ['TRACE'],
+            ['PATCH'],
+        ];
+    }
 }
