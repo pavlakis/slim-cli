@@ -11,6 +11,7 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@PSR2' => true,
         '@PhpCsFixer' => true,
+        'php_unit_test_class_requires_covers' => false,
         'ordered_imports' => [ 'sort_algorithm' => 'length' ],
     ])
     ->setFinder($finder)

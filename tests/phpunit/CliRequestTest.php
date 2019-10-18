@@ -22,7 +22,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @internal
- * @coversNothing
  */
 class CliRequestTest extends \PHPUnit_Framework_TestCase
 {

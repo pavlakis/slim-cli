@@ -15,7 +15,6 @@ use pavlakis\cli\Environment\EnvironmentProperties;
 
 /**
  * @internal
- * @coversNothing
  */
 class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
 {
