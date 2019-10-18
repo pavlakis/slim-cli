@@ -12,7 +12,7 @@ interface RequestInterface
     public function isMethodSupported($method);
 
     /**
-     * @param array  $environmentProperties
+     * @param array $environmentProperties
      *
      * @return \Slim\Http\Request
      */

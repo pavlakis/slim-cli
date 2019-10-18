@@ -15,6 +15,7 @@ class Request implements RequestInterface
         'TRACE',
         'PATCH',
     ];
+
     /**
      * @param string $method
      *
@@ -26,7 +27,7 @@ class Request implements RequestInterface
     }
 
     /**
-     * @param array  $environmentProperties
+     * @param array $environmentProperties
      *
      * @return \Slim\Http\Request
      */
@@ -34,6 +35,7 @@ class Request implements RequestInterface
     {
         /** @var \Slim\Http\Environment $mockEnvironment */
         $mockEnvironment = \Slim\Http\Environment::mock($environmentProperties);
+
         return \Slim\Http\Request::createFromEnvironment($mockEnvironment);
     }
 }

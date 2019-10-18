@@ -1,13 +1,18 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/src')
+   ->in([
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+    ])
 ;
 
 return PhpCsFixer\Config::create()
-    ->setRules(array(
+    ->setRules([
         '@PSR2' => true,
-        'single_import_per_statement' => false
-    ))
+        '@PhpCsFixer' => true,
+        'php_unit_test_class_requires_covers' => false,
+        'ordered_imports' => [ 'sort_algorithm' => 'length' ],
+    ])
     ->setFinder($finder)
-    ;
+;

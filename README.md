@@ -1,10 +1,12 @@
+# pavlakis/slim-cli
+
 [![Build Status](https://travis-ci.org/pavlakis/slim-cli.svg)](https://travis-ci.org/pavlakis/slim-cli)
 [![Total Downloads](https://img.shields.io/packagist/dt/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
 [![Latest Stable Version](https://img.shields.io/packagist/v/pavlakis/slim-cli.svg)](https://packagist.org/packages/pavlakis/slim-cli)
 [![codecov](https://codecov.io/gh/pavlakis/slim-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pavlakis/slim-cli)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
-# Slim 3 Framework CLI Request Middleware
+Slim 3 Framework CLI Request Middleware
 
 This middleware will transform a CLI call into a Request.
 
@@ -22,11 +24,15 @@ Note: Added support for the following HTTP Request methods:
     'PATCH',
 ```
 
-### Add it with composer
+## Install
+
+Via Composer
 
 ```
 composer require pavlakis/slim-cli
 ```
+
+## Usage
 
 ### Pass the parameters in this order
 `route / method / query string`
@@ -94,8 +100,23 @@ $app->get('/status', 'PHPMinds\Action\EventStatusAction:dispatch')
     ->add(new Pavlakis\Middleware\Server\Sapi(["cli"]))
 ```
 
+## Testing
+
+``` bash
+$ composer test
+```
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
-### Credits
+## Credits
 
-Based on Bobby DeVeaux's ([@bobbyjason](https://twitter.com/bobbyjason)) [Gulp Skeleton](https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php)
+- [Antonios Pavlakis](https://github.com/pavlakis)
+
+> Based on Bobby DeVeaux's ([@bobbyjason](https://twitter.com/bobbyjason)) [Gulp Skeleton](https://github.com/dvomedia/gulp-skeleton/blob/master/web/index.php)
+
+## License
+
+The BSD 3-Clause License. Please see [License File](LICENSE) for more information.
