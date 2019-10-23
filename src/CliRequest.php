@@ -1,48 +1,95 @@
 <?php
 /**
- * Pavlakis Slim CLI Request
+ * Pavlakis Slim CLI Request.
  *
- * A Slim 3 middleware enabling a mock GET request to be made through the CLI.
+ * A Slim 3 middleware enabling a mock HTTP request to be made through the CLI.
  * Use in the form: php public/index.php /status GET event=true
  *
- * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2018 Antonis Pavlakis
+ * @see        https://github.com/pavlakis/slim-cli
+ *
+ * @copyright   Copyright © 2019 Antonios Pavlakis
  * @author      Antonios Pavlakis
  * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
  */
+
 namespace pavlakis\cli;
 
-use pavlakis\cli\Environment\EnvironmentProperties;
-use Psr\Http\Message\ServerRequestInterface;
+use pavlakis\cli\Request\Request;
 use Psr\Http\Message\ResponseInterface;
+use pavlakis\cli\Request\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use pavlakis\cli\Environment\EnvironmentProperties;
+use pavlakis\cli\Environment\EnvironmentPropertiesInterface;
 
 class CliRequest
 {
     /**
-     * @var EnvironmentProperties
+     * @var ServerRequestInterface
+     */
+    protected $request;
+    /**
+     * @var EnvironmentPropertiesInterface
      */
     private $environment;
 
     /**
-     * @var ServerRequestInterface
+     * @var RequestInterface
      */
-    protected $request = null;
+    private $requestAdapter;
 
     /**
-     * @param EnvironmentProperties $environment
+     * @param null|EnvironmentPropertiesInterface $environment
+     * @param null|RequestInterface               $request
+     *
      * @throws Exception\DefaultPropertyExistsException
      */
-    public function __construct(EnvironmentProperties $environment = null)
+    public function __construct(EnvironmentPropertiesInterface $environment = null, RequestInterface $request = null)
     {
-        # BC compatibility - always include DefaultEnvironment
-        if (is_null($environment)) {
+        // BC compatibility - always include DefaultEnvironment
+        if (null === $environment) {
             $environment = new EnvironmentProperties();
         }
         $this->environment = $environment;
+
+        if (null === $request) {
+            $request = new Request();
+        }
+        $this->requestAdapter = $request;
+    }
+
+    /**
+     * Invoke middleware.
+     *
+     * @param ServerRequestInterface $request  PSR7 request object
+     * @param ResponseInterface      $response PSR7 response object
+     * @param callable               $next     Next middleware callable
+     *
+     * @return ResponseInterface PSR7 response object
+     */
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
+    {
+        global $argv;
+
+        $this->request = $request;
+
+        if (isset($argv)) {
+            $path = $this->get($argv, 1);
+            $method = $this->get($argv, 2);
+            $params = $this->get($argv, 3);
+
+            if ($this->requestAdapter->isMethodSupported($method)) {
+                $this->request = $this->getMockRequest($this->getUri($path, $params), $params, $method);
+            }
+
+            unset($argv);
+        }
+
+        return $next($this->request, $response);
     }
 
     /**
      * Exposed for testing.
+     *
      * @return ServerRequestInterface
      */
     public function getRequest()
@@ -51,12 +98,13 @@ class CliRequest
     }
 
     /**
-     * Get a value from an array if exists otherwise return a default value
+     * Get a value from an array if exists otherwise return a default value.
      *
-     * @param   array   $argv
-     * @param   integer $key
-     * @param   mixed   $default
-     * @return  string
+     * @param array $argv
+     * @param int   $key
+     * @param mixed $default
+     *
+     * @return string
      */
     private function get($argv, $key, $default = '')
     {
@@ -68,10 +116,11 @@ class CliRequest
     }
 
     /**
-     * Construct the URI if path and params are being passed
+     * Construct the URI if path and params are being passed.
      *
      * @param string $path
      * @param string $params
+     *
      * @return string
      */
     private function getUri($path, $params)
@@ -82,7 +131,7 @@ class CliRequest
         }
 
         if (strlen($params) > 0) {
-            $uri .= '?' . $params;
+            $uri .= '?'.$params;
         }
 
         return $uri;
@@ -91,45 +140,18 @@ class CliRequest
     /**
      * @param string $uri
      * @param string $queryString
+     * @param string $method
+     *
      * @return \Slim\Http\Request
      */
-    private function getMockRequest($uri, $queryString)
+    private function getMockRequest($uri, $queryString, $method)
     {
-        return \Slim\Http\Request::createFromEnvironment(\Slim\Http\Environment::mock(
-            $this->environment->getProperties([
-                'REQUEST_URI'       => $uri,
-                'QUERY_STRING'      => $queryString
-            ])
-        ));
-    }
+        $environmentProperties = $this->environment->getProperties([
+            'REQUEST_METHOD' => strtoupper($method),
+            'REQUEST_URI' => $uri,
+            'QUERY_STRING' => $queryString,
+        ]);
 
-    /**
-     * Invoke middleware
-     *
-     * @param  ServerRequestInterface   $request  PSR7 request object
-     * @param  ResponseInterface        $response PSR7 response object
-     * @param  callable                 $next     Next middleware callable
-     *
-     * @return ResponseInterface PSR7 response object
-     */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
-        global $argv;
-
-        $this->request = $request;
-
-        if (isset($argv)) {
-            $path   = $this->get($argv, 1);
-            $method = $this->get($argv, 2);
-            $params = $this->get($argv, 3);
-
-            if (strtoupper($method) === $this->environment->getRequestMethod()) {
-                $this->request = $this->getMockRequest($this->getUri($path, $params), $params);
-            }
-
-            unset($argv);
-        }
-
-        return $next($this->request, $response);
+        return $this->requestAdapter->getMockRequest($environmentProperties);
     }
 }

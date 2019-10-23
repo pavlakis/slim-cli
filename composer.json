@@ -28,17 +28,21 @@
     "php": ">=5.5.0"
   },
   "require-dev": {
-    "slim/slim": "^3.0",
-    "phpunit/phpunit": "^4.0"
+    "friendsofphp/php-cs-fixer": "^2.2",
+    "phpunit/phpunit": "^4.0",
+    "slim/slim": "^3.0"
   },
   "config": {
     "bin-dir": "bin",
+    "sort-packages": true,
     "preferred-install": {
       "*": "dist"
     }
   },
   "scripts": {
     "test": "phpunit -c tests/phpunit/phpunit.xml --colors=always",
+    "check-style": "php-cs-fixer fix --dry-run",
+    "fix-style": "php-cs-fixer fix",
     "static-analysis": "phpstan analyse src --level 7"
   }
 }
