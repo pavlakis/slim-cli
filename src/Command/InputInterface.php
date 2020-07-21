@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace pavlakis\cli\Command;
+namespace Pavlakis\Cli\Command;
 
 interface InputInterface
 {
@@ -12,4 +12,6 @@ interface InputInterface
      * @return string|null
      */
     public function getArgument(string $argument): ?string;
+
+    public function hasInput(): bool;
 }

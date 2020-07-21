@@ -1,40 +1,49 @@
 {
   "name": "pavlakis/slim-cli",
-  "description": "Making a mock GET request through the CLI and enabling the same application entry point on CLI scripts.",
+  "description": "Making a mock request through the CLI and enabling the same application entry point on CLI scripts.",
   "keywords": [
-    "slim", "framework", "cli", "middleware"
+    "slim", "framework", "cli", "middleware", "psr17"
   ],
   "homepage": "http://github.com/pavlakis/slim-cli",
   "type": "library",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "authors": [
     {
       "name": "Antonis Pavlakis",
       "email": "adoni@pavlakis.info",
-      "homepage": "https://pavlakis.uk"
+      "homepage": "https://pavlakis.dev"
     }
   ],
   "autoload": {
     "psr-4": {
-      "pavlakis\\cli\\": "src"
+      "Pavlakis\\Cli\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "pavlakis\\cli\\tests\\" : "tests/phpunit"
+      "Pavlakis\\Cli\\Test\\" : "tests/phpunit"
     }
   },
   "require": {
-    "php": ">=5.5.0"
+    "php": "^7.2",
+    "slim/http": "^1.0",
+    "slim/psr7": "^1.1"
   },
   "require-dev": {
-    "slim/slim": "^3.0",
-    "phpunit/phpunit": "^4.0"
+    "slim/slim": "^4.0",
+    "phpunit/phpunit": "^8.0",
+    "phpstan/phpstan": "^0.12.32",
+    "friendsofphp/php-cs-fixer": "^2.16"
   },
   "config": {
     "bin-dir": "bin",
     "preferred-install": {
       "*": "dist"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.x"
     }
   },
   "scripts": {

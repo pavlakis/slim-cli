@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace pavlakis\cli\Command;
+namespace Pavlakis\Cli\Command;
 
 /**
+ * Usage: php public/index.php -m=GET -p=/ -q=test=123
+ *
  * -m (method get, post, etc) defaults to ‘get’
  * -q (query parameters)
  * -d (data for a post??)
@@ -13,14 +15,14 @@ namespace pavlakis\cli\Command;
  */
 final class Input implements InputInterface
 {
-    private const SHORT_OPTIONS = 'm::q::d::c::ct::p:';
+    private const SHORT_OPTIONS = 'm::q::d::c::h::p:';
 
     private const LONG_OPTIONS = [
         'method::',
         'query::',
         'data::',
         'content::',
-        'content-type::',
+        'header::',
         'path:',
     ];
 
@@ -29,29 +31,46 @@ final class Input implements InputInterface
         'query' => 'q',
         'data' => 'd',
         'content' => 'c',
-        'content-type' => 'ct',
+        'header' => 'h',
         'path' => 'p',
     ];
 
-    private $options;
+    private $values;
 
-    public function __construct()
+    /**
+     * @param array<string, string> $values
+     */
+    public function __construct(array $values)
     {
-        $this->options = \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS);
+        $this->values = $values;
+    }
+
+    public static function create(): InputInterface
+    {
+        return new self(
+            \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS)
+        );
+    }
+
+    public function hasInput(): bool
+    {
+        return 0 !== count($this->values)
+            && (isset($this->values['m']) || isset($this->values['method']));
     }
 
     public function getArgument(string $argument): ?string
     {
         if (!array_key_exists($argument, self::OPTIONS) && !in_array($argument, self::OPTIONS)) {
-            throw new \InvalidArgumentException(\sprintf('The argument [%s] does not exist', $argument));
+            throw new \InvalidArgumentException(\sprintf('The argument "%s" does not exist', $argument));
         }
 
-        if (isset($this->options[$argument])) {
-            return $this->options[$argument];
+        if (isset($this->values[$argument])) {
+            return $this->values[$argument];
         }
 
-        if (isset($this->options[self::OPTIONS[$argument]])) {
-            return $this->options[self::OPTIONS[$argument]];
+
+        if (isset(self::OPTIONS[$argument], $this->values[self::OPTIONS[$argument]])) {
+            return $this->values[self::OPTIONS[$argument]];
         }
 
         return null;
