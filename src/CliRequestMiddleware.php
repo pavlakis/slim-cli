@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pavlakis\Cli;
 
 use Pavlakis\Cli\Command\Input;
+use Pavlakis\Cli\Command\InputInterface;
 use Pavlakis\Cli\Http\EnvironmentInterface;
 use Pavlakis\Cli\Http\EnvironmentProperties;
 use Pavlakis\Cli\Http\Request\CliRequestFactory;
@@ -25,9 +26,13 @@ class CliRequestMiddleware implements Middleware
      */
     private $input;
 
-    public function __construct(?EnvironmentInterface $environment = null)
+    public function __construct(?EnvironmentInterface $environment = null, ?InputInterface $input = null)
     {
-        $this->input = Input::create();
+        if (null === $input) {
+            $input = Input::create();
+        }
+        $this->input = $input;
+
         if (null === $environment) {
             $environment = EnvironmentProperties::createFromInput($this->input);
         }
