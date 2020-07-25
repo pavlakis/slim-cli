@@ -7,11 +7,12 @@ namespace Pavlakis\Cli\Command;
 interface InputInterface
 {
     /**
-     * @param string $argument
+     * @param string      $argument
+     * @param string|null $default
      *
      * @return string|null
      */
-    public function getArgument(string $argument): ?string;
+    public function getArgument(string $argument, ?string $default = null): ?string;
 
-    public function hasInput(): bool;
+    public function isVerified(): bool;
 }

@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace Pavlakis\Cli\Command;
 
 /**
- * Usage: php public/index.php -m=GET -p=/ -q=test=123
+ * Usage:
+ * PAVLAKIS_SLIM_CLI_REQUEST=true php public/index.php --method=GET --query=slim-cli=itWorks!
+ *
+ * Using a script, define PAVLAKIS_SLIM_CLI_REQUEST
  *
  * -m (method get, post, etc) defaults to ‘get’
  * -q (query parameters)
  * -d (data for a post??)
  * -c (content eg json string)
- * -p (path eg /events ) - required
+ * -p (path eg /events ) -
  */
 final class Input implements InputInterface
 {
-    private const SHORT_OPTIONS = 'm::q::d::c::h::p:';
+    private const SHORT_OPTIONS = 'm::q::d::c::h::e::p::';
 
     private const LONG_OPTIONS = [
         'method::',
@@ -23,7 +26,8 @@ final class Input implements InputInterface
         'data::',
         'content::',
         'header::',
-        'path:',
+        'path::',
+        'environment::',
     ];
 
     private const OPTIONS = [
@@ -33,32 +37,45 @@ final class Input implements InputInterface
         'content' => 'c',
         'header' => 'h',
         'path' => 'p',
+        'environment' => 'e', // pass any request parameters as a CSV
     ];
 
+    /**
+     * @var array
+     */
     private $values;
 
     /**
-     * @param array<string, string> $values
+     * @var bool
      */
-    public function __construct(array $values)
+    private $verified;
+
+    /**
+     * @param array<string, string> $values
+     * @param bool                  $verified
+     */
+    private function __construct(array $values, bool $verified)
     {
         $this->values = $values;
+        $this->verified = $verified;
     }
 
     public static function create(): InputInterface
     {
-        return new self(
-            \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS)
-        );
+        $values = \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS);
+        if (false === $values) {
+            $values = [];
+        }
+
+        return new self($values, \array_key_exists('PAVLAKIS_SLIM_CLI_REQUEST', $_SERVER));
     }
 
-    public function hasInput(): bool
+    public function isVerified(): bool
     {
-        return 0 !== count($this->values)
-            && (isset($this->values['m']) || isset($this->values['method']));
+        return $this->verified;
     }
 
-    public function getArgument(string $argument): ?string
+    public function getArgument(string $argument, ?string $default = null): ?string
     {
         if (!array_key_exists($argument, self::OPTIONS) && !in_array($argument, self::OPTIONS)) {
             throw new \InvalidArgumentException(\sprintf('The argument "%s" does not exist', $argument));
@@ -68,11 +85,10 @@ final class Input implements InputInterface
             return $this->values[$argument];
         }
 
-
         if (isset(self::OPTIONS[$argument], $this->values[self::OPTIONS[$argument]])) {
             return $this->values[self::OPTIONS[$argument]];
         }
 
-        return null;
+        return $default;
     }
 }
