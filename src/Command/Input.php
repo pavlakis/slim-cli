@@ -29,12 +29,12 @@ final class Input implements InputInterface
     ];
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $values;
 
     /**
-     * @param array<string, string> $values
+     * @param array<string, mixed> $values
      */
     public function __construct(array $values)
     {
@@ -44,7 +44,7 @@ final class Input implements InputInterface
     public static function createFromCli(): InputInterface
     {
         $values = \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS);
-        if (false === $values) {
+        if (!is_array($values)) {
             $values = [];
         }
 

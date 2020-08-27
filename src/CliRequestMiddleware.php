@@ -17,7 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 class CliRequestMiddleware implements Middleware
 {
     /**
-     * @var EnvironmentProperties
+     * @var EnvironmentInterface|null
      */
     private $environment;
 
@@ -46,11 +46,20 @@ class CliRequestMiddleware implements Middleware
             return $handler->handle($request);
         }
 
-        $method = $this->input->getArgument('method', '');
-        if ($this->environment->isAllowedMethod($method)) {
+        $requestMethod = $this->getRequestMethod();
+        if ($this->environment->isAllowedMethod($requestMethod)) {
             $request = CliRequestFactory::createFromEnvironment($this->environment);
         }
 
         return $handler->handle($request);
+    }
+
+    private function getRequestMethod(): string
+    {
+        if (null !== $this->environment) {
+            return $this->environment->getRequestMethod();
+        }
+
+        return $this->input->getArgument('method', '');
     }
 }

@@ -17,6 +17,7 @@ final class EnvironmentProperties implements EnvironmentInterface
         'DELETE',
     ];
 
+    /** @var array<string, mixed> */
     private $properties = [
         'HTTP_USER_AGENT' => 'Slim CLI',
     ];
@@ -29,7 +30,7 @@ final class EnvironmentProperties implements EnvironmentInterface
     /**
      * @param UriInterface         $uri
      * @param array<string, mixed> $customProperties
-     * @param array                $environmentProperties
+     * @param array<string, mixed> $environmentProperties
      */
     public function __construct(
         UriInterface $uri,
@@ -72,14 +73,16 @@ final class EnvironmentProperties implements EnvironmentInterface
      */
     private function mergeCustomProperties(array $customProperties = []): void
     {
-        $this->properties = array_merge(Environment::mock($customProperties), $this->properties);
+        /** @var array<string, mixed> $mockEnvironment */
+        $mockEnvironment = Environment::mock($customProperties);
+        $this->properties = array_merge($mockEnvironment, $this->properties);
     }
 
     /**
      * Populate arguments as passed through specific flags.
      * The environment override will take precedence and override with all passed arguments as they are.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getProperties(): array
     {
@@ -87,10 +90,9 @@ final class EnvironmentProperties implements EnvironmentInterface
     }
 
     /**
-     * @param array $args
-     * @param array $environmentProperties
+     * @param array<string, mixed> $environmentProperties
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function overrideFromEnvironment(array $environmentProperties = []): array
     {
