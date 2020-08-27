@@ -14,5 +14,5 @@ interface InputInterface
      */
     public function getArgument(string $argument, ?string $default = null): ?string;
 
-    public function isVerified(): bool;
+    public function hasInput(): bool;
 }

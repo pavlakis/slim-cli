@@ -22,11 +22,6 @@ final class EnvironmentProperties implements EnvironmentInterface
     ];
 
     /**
-     * @var string
-     */
-    private $requestMethod;
-
-    /**
      * @var UriInterface
      */
     private $uri;
@@ -34,14 +29,16 @@ final class EnvironmentProperties implements EnvironmentInterface
     /**
      * @param UriInterface         $uri
      * @param array<string, mixed> $customProperties
-     * @param string               $requestMethod
+     * @param array                $environmentProperties
      */
-    public function __construct(UriInterface $uri, array $customProperties = [], string $requestMethod = '')
-    {
+    public function __construct(
+        UriInterface $uri,
+        array $customProperties = [],
+        array $environmentProperties = []
+    ) {
         $this->uri = $uri;
-        $this->requestMethod = $requestMethod;
-        // todo - use populate() method
         $this->mergeCustomProperties($customProperties);
+        $this->overrideFromEnvironment($environmentProperties);
     }
 
     public static function createFromInput(InputInterface $input): ?EnvironmentInterface
@@ -52,13 +49,21 @@ final class EnvironmentProperties implements EnvironmentInterface
             $params
         );
 
+        $environmentProperties = [];
+        if (null !== $input->getArgument('environment', null)) {
+            $environmentProperties = \json_decode($input->getArgument('environment', ''), true);
+        }
+
+        $requestMethod = $input->getArgument('method', '');
+
         return new self(
             $uri,
             [
             'REQUEST_URI' => $uri->getUri(),
+            'REQUEST_METHOD' => $requestMethod,
             'QUERY_STRING' => $params,
             ],
-            $params = $input->getArgument('method', '')
+            $environmentProperties
         );
     }
 
@@ -73,7 +78,6 @@ final class EnvironmentProperties implements EnvironmentInterface
     /**
      * Populate arguments as passed through specific flags.
      * The environment override will take precedence and override with all passed arguments as they are.
-     * e.g. -e=REQUEST_SCHEME=https,SERVER_PORT=443.
      *
      * @return array
      */
@@ -88,14 +92,8 @@ final class EnvironmentProperties implements EnvironmentInterface
      *
      * @return array
      */
-    private function populate(array $args = [], array $environmentProperties = []): array
+    private function overrideFromEnvironment(array $environmentProperties = []): array
     {
-        foreach ($args as $property => $value) {
-            if (array_key_exists($property, $this->properties)) {
-                $this->properties[strtoupper($property)] = $value;
-            }
-        }
-
         foreach ($environmentProperties as $property => $value) {
             $property = strtoupper($property);
             if ('SERVER_PORT' === $property) {
@@ -120,11 +118,15 @@ final class EnvironmentProperties implements EnvironmentInterface
 
     public function getRequestMethod(): string
     {
-        return $this->requestMethod;
+        if (!\array_key_exists('REQUEST_METHOD', $this->properties)) {
+            throw new \RuntimeException('Request method has not been passed.');
+        }
+
+        return $this->properties['REQUEST_METHOD'];
     }
 
     public function getUri(): string
     {
-        return $this->uri->getUri();
+        return $this->properties['REQUEST_URI'] ?? $this->uri->getUri();
     }
 }

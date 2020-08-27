@@ -4,18 +4,6 @@ declare(strict_types=1);
 
 namespace Pavlakis\Cli\Command;
 
-/**
- * Usage:
- * PAVLAKIS_SLIM_CLI_REQUEST=true php public/index.php --method=GET --query=slim-cli=itWorks!
- *
- * Using a script, define PAVLAKIS_SLIM_CLI_REQUEST
- *
- * -m (method get, post, etc) defaults to ‘get’
- * -q (query parameters)
- * -d (data for a post??)
- * -c (content eg json string)
- * -p (path eg /events ) -
- */
 final class Input implements InputInterface
 {
     private const SHORT_OPTIONS = 'm::q::d::c::h::e::p::';
@@ -37,7 +25,7 @@ final class Input implements InputInterface
         'content' => 'c',
         'header' => 'h',
         'path' => 'p',
-        'environment' => 'e', // pass any request parameters as a CSV
+        'environment' => 'e',
     ];
 
     /**
@@ -46,33 +34,26 @@ final class Input implements InputInterface
     private $values;
 
     /**
-     * @var bool
-     */
-    private $verified;
-
-    /**
      * @param array<string, string> $values
-     * @param bool                  $verified
      */
-    private function __construct(array $values, bool $verified)
+    public function __construct(array $values)
     {
         $this->values = $values;
-        $this->verified = $verified;
     }
 
-    public static function create(): InputInterface
+    public static function createFromCli(): InputInterface
     {
         $values = \getopt(self::SHORT_OPTIONS, self::LONG_OPTIONS);
         if (false === $values) {
             $values = [];
         }
 
-        return new self($values, \array_key_exists('PAVLAKIS_SLIM_CLI_REQUEST', $_SERVER));
+        return new self($values);
     }
 
-    public function isVerified(): bool
+    public function hasInput(): bool
     {
-        return $this->verified;
+        return 0 !== \count($this->values);
     }
 
     public function getArgument(string $argument, ?string $default = null): ?string

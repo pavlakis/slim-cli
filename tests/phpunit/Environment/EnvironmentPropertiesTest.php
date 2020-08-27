@@ -1,81 +1,40 @@
 <?php
-/**
- * Pavlakis Slim CLI Request
- *
- * @link        https://github.com/pavlakis/slim-cli
- * @copyright   Copyright © 2018 Antonis Pavlakis
- * @author      Antonios Pavlakis
- * @license     https://github.com/pavlakis/slim-cli/blob/master/LICENSE (BSD 3-Clause License)
- */
-namespace pavlakis\cli\tests\Environment;
 
-use pavlakis\cli\Environment\EnvironmentProperties;
+namespace Pavlakis\Cli\Test\Environment;
 
+use Pavlakis\Cli\Command\Input;
+use PHPUnit\Framework\TestCase;
+use Pavlakis\Cli\Http\EnvironmentProperties;
 
-class EnvironmentPropertiesTest extends \PHPUnit_Framework_TestCase
+class EnvironmentPropertiesTest extends TestCase
 {
-    /**
-     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
-     */
-    public function testGetPropertiesWithEmptyArgumentsReturnsDefaultProperties()
+    public function testGetPropertiesWithEmptyArgumentsReturnsDefaultProperties(): void
     {
-        $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '',
-            'QUERY_STRING'      => ''
-        ];
+        $input = new Input([]);
 
-        static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties());
+        $properties = EnvironmentProperties::createFromInput($input)->getProperties();
+        $this->assertSame('/', $properties['REQUEST_URI']);
+        $this->assertSame('', $properties['REQUEST_METHOD']);
     }
 
-    /**
-     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
-     */
-    public function testGetPropertiesWithArgumentsReturnsUpdatedDefaultProperties()
+    public function testGetPropertiesWithArgumentsReturnsUpdatedDefaultProperties(): void
     {
-        $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
-        ];
+        $input = new Input(['method' => 'GET', 'path' => '/status', 'query' => 'event=true']);
 
-        static::assertSame($defaultProperties, (new EnvironmentProperties())->getProperties([
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
-        ]));
+        $properties = EnvironmentProperties::createFromInput($input)->getProperties();
+        $this->assertSame('GET', $properties['REQUEST_METHOD']);
+        $this->assertSame('/status?event=true', $properties['REQUEST_URI']);
+        $this->assertSame('event=true', $properties['QUERY_STRING']);
     }
 
-    /**
-     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
-     */
-    public function testGetPropertiesWithCustomProperty()
+    public function testGetPropertiesWithCustomProperty(): void
     {
-        $defaultProperties = [
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true',
-            'SERVER_PORT'      => 9000,
-        ];
+        $input = new Input(['method' => 'GET', 'path' => '/status', 'query' => 'event=true', 'environment' => '{"SERVER_PORT":9000}']);
 
-        static::assertSame($defaultProperties, (new EnvironmentProperties(['SERVER_PORT' => 9000]))->getProperties([
-            'REQUEST_URI'       => '/status',
-            'QUERY_STRING'      => 'event=true'
-        ]));
-    }
-
-    /**
-     * @expectedException \pavlakis\cli\Exception\DefaultPropertyExistsException
-     */
-    public function testMergeCustomPropertiesPassingDefaultPropertyThrowsException()
-    {
-        new EnvironmentProperties(['REQUEST_METHOD' => 'POST']);
-    }
-
-    /**
-     * @throws \pavlakis\cli\Exception\DefaultPropertyExistsException
-     */
-    public function testGetGetRequestMethod()
-    {
-        static::assertSame('GET', (new EnvironmentProperties())->getRequestMethod());
+        $properties = EnvironmentProperties::createFromInput($input)->getProperties();
+        $this->assertSame('GET', $properties['REQUEST_METHOD']);
+        $this->assertSame('/status?event=true', $properties['REQUEST_URI']);
+        $this->assertSame('event=true', $properties['QUERY_STRING']);
+        $this->assertSame(9000, $properties['SERVER_PORT']);
     }
 }

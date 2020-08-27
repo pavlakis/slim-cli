@@ -29,6 +29,7 @@ final class UriTest extends TestCase
         return [
             ['', '', '/'],
             ['/', '', '/'],
+            ['events', '', '/events'],
             ['/events', '', '/events'],
             ['/events', 'p1=1&p2=2', '/events?p1=1&p2=2'],
         ];

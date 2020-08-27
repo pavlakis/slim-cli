@@ -29,7 +29,7 @@ class CliRequestMiddleware implements Middleware
     public function __construct(?EnvironmentInterface $environment = null, ?InputInterface $input = null)
     {
         if (null === $input) {
-            $input = Input::create();
+            $input = Input::createFromCli();
         }
         $this->input = $input;
 
@@ -42,7 +42,7 @@ class CliRequestMiddleware implements Middleware
 
     public function process(Request $request, RequestHandler $handler): Response
     {
-        if (!$this->input->isVerified()) {
+        if (!$this->input->hasInput()) {
             return $handler->handle($request);
         }
 
