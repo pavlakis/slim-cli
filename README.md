@@ -4,6 +4,9 @@
 [![codecov](https://codecov.io/gh/pavlakis/slim-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pavlakis/slim-cli)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 
+ ##### :warning: You are browsing the code of the upcoming pavlakis/slim-cli version 2.0 compatible with Slim 4.
+ ##### Version 2 has been a full re-write. This version is not yet stable.
+
 # Slim 4 Framework CLI Request Middleware
 
 This middleware will transform a CLI call into a mock Request.
