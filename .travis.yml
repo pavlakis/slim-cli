@@ -6,6 +6,8 @@ php:
 
 install:
   - composer install
+
+script:
   - composer test
   - composer static-analysis
 
