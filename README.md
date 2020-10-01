@@ -10,19 +10,6 @@ Slim 3 Framework CLI Request Middleware
 
 This middleware will transform a CLI call into a Request.
 
-Note: Added support for the following HTTP Request methods:
-
-```
-    'GET',
-    'HEAD',
-    'POST',
-    'PUT',
-    'DELETE',
-    'CONNECT',
-    'OPTIONS',
-    'TRACE',
-    'PATCH',
-```
 
 ## Install
 
